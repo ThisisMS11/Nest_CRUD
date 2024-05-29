@@ -5,3 +5,9 @@ export class UserNotFoundException extends NotFoundException {
         super(`User with ID ${userId} not found`);
     }
 }
+
+export class WalletAddressNotFoundException extends NotFoundException {
+    constructor(walletAddressId: number) {
+        super(`Wallet Address with ID ${walletAddressId} not found`);
+    }
+}

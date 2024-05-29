@@ -9,6 +9,6 @@ export class WalletAddress {
   @Column({ unique: true })
   address: string;
 
-  @ManyToOne(() => User, (user) => user.walletAddresses)
+  @ManyToOne(() => User, (user) => user.walletAddresses, { cascade: true })
   user: User;
 }
