@@ -1,73 +1,233 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Nest CRUD API with PostgreSQL
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+This is a basic CRUD API built with Nest.js to manage a PostgreSQL database. It provides endpoints for managing users and wallet addresses.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Setup Instructions
 
-## Description
+1. **Clone the Repository**: 
+   ```bash
+   git clone https://github.com/ThisisMS11/Nest_CRUD
+   ```
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+2. **Install Dependencies**:
+   ```bash
+   cd Nest_CRUD
+   npm install
+   ```
 
-## Installation
+3. **Database Setup**:
+   - Create a PostgreSQL database.
+   - Update the database connection configuration in `app.module.ts`.
 
-```bash
-$ npm install
+Example configuration (replace username , password and database name as per your own in app.module.ts):
+```
+@Module({
+  imports: [
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      host: 'localhost',
+      port: 5432,
+      username: 'cutoff_user',
+      password: 'cutoff',
+      database: 'cutoff',
+      entities: [User, WalletAddress],
+      synchronize: true,
+    }),
+  ],
+})
 ```
 
-## Running the app
+4. **Run the Application**:
+   ```bash
+   npm run start
+   ```
 
-```bash
-# development
-$ npm run start
+5. **Test the API**:
+   - You can use tools like Postman or cURL to test the API endpoints.
 
-# watch mode
-$ npm run start:dev
+## API Documentation
 
-# production mode
-$ npm run start:prod
-```
+### Users
 
-## Test
+#### Create User
 
-```bash
-# unit tests
-$ npm run test
+- **URL**: `/users`
+- **Method**: `POST`
+- **Request Body**:
+  ```typescript
+  {
+    "name": string,
+    "email": string,
+    "password": string
+  }
+  ```
+- **Response**:
+  ```typescript
+  {
+    "id": number,
+    "name": string,
+    "email": string,
+  }
+  ```
 
-# e2e tests
-$ npm run test:e2e
+#### Get All Users
 
-# test coverage
-$ npm run test:cov
-```
+- **URL**: `/users`
+- **Method**: `GET`
+- **Response**:
+  ```typescript
+  [
+    {
+      "id": number,
+      "name": string,
+      "email": string
+    },
+    ...
+  ]
+  ```
 
-## Support
+#### Get User by ID
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+- **URL**: `/users/:id`
+- **Method**: `GET`
+- **Response**:
+  ```typescript
+  {
+    "id": number,
+    "name": string,
+    "email": string
+  }
+  ```
 
-## Stay in touch
+#### Update User
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+- **URL**: `/users/:id` (id represents the user whose information is to be updated.)
+- **Method**: `PUT`
+- **Request Body**:
+  ```typescript
+  {
+    "id": number, (current user id for validation purposes)
+    "email": string,
+    "password": string
+  }
+  ```
+- **Response**:
+  ```typescript
+  {
+    "message": "Update Successful"
+  }
+  ```
 
-## License
+#### Delete User
 
-Nest is [MIT licensed](LICENSE).
+- **URL**: `/users/:id` (id represents the user whose information is to be updated.)
+- **Method**: `DELETE`
+- **Request Body**:
+  ```typescript
+  {
+    "userId": number, (current user id for validation purposes)
+  }
+  ```
+- **Response**:
+  ```typescript
+  {
+    "message": "Deletion Successful"
+  }
+  ```
+
+## Wallet Addresses
+
+#### Create Wallet Address
+
+- **URL**: `/wallet-address`
+- **Method**: `POST`
+- **Request Body**:
+  ```typescript
+  {
+    "userId": number,
+    "address": string
+  }
+  ```
+- **Response**:
+  ```typescript
+  {
+    "id": number,
+    "address": string,
+    "user": number
+  }
+  ```
+
+#### Get All Wallet Addresses
+
+- **URL**: `/wallet-address`
+- **Method**: `GET`
+- **Response**:
+  ```typescript
+  [
+    {
+      "id": number,
+      "address": string,
+      "user": {
+        "id": number,
+        "name": string,
+        "email": string
+      }
+    },
+    ...
+  ]
+  ```
+
+#### Get Wallet Address by ID
+
+- **URL**: `/wallet-address/:id` (id of the wallet address to be fetched)
+- **Method**: `GET`
+- **Response**:
+  ```typescript
+  {
+    "id": number,
+    "address": string,
+    "user": {
+      "id": number,
+      "name": string,
+      "email": string
+    }
+  }
+  ```
+
+#### Update Wallet Address
+
+- **URL**: `/wallet-address/:id` (id of the wallet address to be updated)
+- **Method**: `PUT`
+- **Request Body**:
+  ```typescript
+  {
+    "user": number,
+    "address": string
+  }
+  ```
+- **Response**:
+  ```typescript
+  {
+    "message": "Update Successful"
+  }
+  ```
+
+#### Delete Wallet Address
+
+- **URL**: `/wallet-address/:id` (id of the wallet address to be deleted)
+- **Method**: `DELETE`
+- **Request Body**:
+  ```typescript
+  {
+    "userId": number  
+  }
+  ```
+- **Response**:
+  ```typescript
+  {
+    "message": "Deletion Successful"
+  }
+  ```
+
+
+## Thank You.
